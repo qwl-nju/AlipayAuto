@@ -1,4 +1,4 @@
-package com.onsale.nju;
+
 
 import java.util.List;
 
@@ -15,13 +15,7 @@ public class AlipayAuto {
 
 	public static void main(String[] args) {
 		login();
-		String oppositeUser = getOppositeUser("20150826110500100010740029003925");
-		System.out.println("交易方对方信息：" + oppositeUser);
-		oppositeUser = getOppositeUser("20150720110500100010740025980311");
-		System.out.println("交易方对方信息：" + oppositeUser);
-		oppositeUser = getOppositeUser("2015081521001004740064396260");
-		System.out.println("交易方对方信息：" + oppositeUser);
-
+		//登录后可以爬去账单信息等
 	}
 
 	// 定义自己的休眠方法，精简代码量
@@ -36,78 +30,47 @@ public class AlipayAuto {
 
 	// 登录操作，负责将界面跳转到交易记录界面
 	private static void login() {
-		// 启动火狐浏览器
+		
+		// -------------启动火狐浏览器--------------------
 		 System.setProperty("webdriver.firefox.bin", "D:\\firfox\\firefox.exe");
 		 WebDriver driver = new FirefoxDriver();
-		// 启动Chrome浏览器
-//		System.setProperty("webdriver.chrome.driver", "E:\\javafiles\\NjuOnSale\\chromedriver.exe");
-//		driver = new ChromeDriver();
+		 
+		// -------------启动Chrome浏览器------------------
+		//System.setProperty("webdriver.chrome.driver", "E:\\javafiles\\NjuOnSale\\chromedriver.exe");
+		//driver = new ChromeDriver();
+		
 		// 获取登录页面
 		driver.get("https://auth.alipay.com/login/index.htm");
-		// 获取用户名输入框
 		
-		String username = "15056919620";
+		// 获取用户名输入框
+		String username = "15****9620";
 		driver.findElement(By.id("J-input-user")).clear();
-		for(int i = 0, len = username.length(); i < len; i++){
+		for(int i = 0, len = username.length(); i < len; i++){//输入用户名，每隔500ms输入一个字符，过快输入会登录失败
 			driver.findElement(By.id("J-input-user")).sendKeys(username.charAt(i) + "");
 			sleep(500);			
 		}		
-		//driver.findElement(By.id("J-input-user")).sendKeys("15056919620");
-		// 休息500ms，否则，速度太快，会将密码内容填充到用户名输入框中
 		sleep(500);
+		
 		// 获取密码输入框
 		driver.findElement(By.id("password_rsainput")).clear();
 		sleep(1000);
-		String password = "123qwertyuiopp??";
-		for(int i = 0, len = password.length(); i < len; i++){
+		String password = "123****";
+		for(int i = 0, len = password.length(); i < len; i++){//防止过快输入
 			driver.findElement(By.id("password_rsainput")).sendKeys(password.charAt(i) + "");
 			sleep(500);			
 		}
+		sleep(2000);
 
-		// 休息8秒等待用户输入验证码
-		sleep(2000);
-		// 当前URL 0
-		// ：https://authsu18.alipay.com/login/certCheck.htm?goto=https%3A%2F%2Fwww.alipay.com%2F
-		System.out.println("当前URL 0 ：" + driver.getCurrentUrl());
-		//driver.get("https://www.alipay.com/");
-		// 点击个人用户登录
-		//driver.findElement(By.id("J-login-btn")).click();
+		//获取登录按钮
 		WebElement login_button = driver.findElement(By.id("J-login-btn"));
-		sleep(2000); 
+		sleep(2000); //在获取登录按钮和点击登录按钮之间间隔2s
 		login_button.click();
+		
+		//等待20s，用于输入手机验证码
 		sleep(20000);//用于输入验证码
-		//driver.findElement(By.className("personal-login")).click();
-		// 当前URL 1 ：https://www.alipay.com/
-		System.out.println("当前URL 1 ：" + driver.getCurrentUrl());
-		sleep(2000);
-		//WebElement myAlipay = driver.findElement(By.className("am-button-innerNav,button-myalipay"));
-		//System.out.println("myAlipay isSelected ：" + myAlipay.isSelected());// false
-		//System.out.println("myAlipay isEnabled ：" + myAlipay.isEnabled());// true
-		//System.out.println("myAlipay isDisplayed ：" + myAlipay.isDisplayed());// true
-		// 点击进入我的支付宝按钮
-		//driver.findElement(By.className("am-button-innerNav,button-myalipay")).click();
-		// 当前URL 2 ：https://my.alipay.com/portal/i.htm
-		System.out.println("当前URL 2 ：" + driver.getCurrentUrl());
-		// boolean selected1 =
-		// driver.findElement(By.className("fn-ml10")).isSelected();
-		// System.out.println("收支明细是否选中：" + selected1);
-		// org.openqa.selenium.NoSuchElementException: no such keyword: Element
-		// was not in a form, so could not submit.
-		// driver.findElement(By.className("fn-ml10")).submit();//跳转收支明细
-		// Exception in thread "main" org.openqa.selenium.WebDriverException:
-		// unknown error: Element is not clickable at point
-		// driver.findElement(By.xpath("//*[@id=\"J-trend-consume\"]/div/div[1]/div/a[1]")).click();
-		// driver.findElement(By.className("fn-ml10")).click();
-		// 无反应，看样子一直不会让你点的了
-		// WebDriverWait webDriverWait = new WebDriverWait(driver, 3);
-		// webDriverWait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id=\"J-trend-consume\"]/div/div[1]/div/a[1]")));
-		// 跳转到收支明细界面
-		// driver.get("https://xlab.alipay.com/consume/record/items.htm");
+		
 		// 跳转到交易记录界面
 		driver.get("https://consumeprod.alipay.com/record/index.htm");
-		String currentUrl = driver.getCurrentUrl();
-		// 当前URL 3 ：https://consumeprod.alipay.com/record/advanced.htm
-		System.out.println("当前URL 3 ：" + currentUrl);
 		sleep(1000);
 	}
 
